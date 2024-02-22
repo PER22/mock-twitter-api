@@ -15,3 +15,13 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+_config.yml
+HELP.md
+Assessment 1.postman_environment.json
+Assessment 1 Test Suite.postman_collection.json
+mvnw
+src/.DS_Store
+src/main/java/.DS_Store
+src/main/java/com/.DS_Store
+src/main/.DS_Store
+src/main/java/com/cooksys/.DS_Store
