@@ -15,6 +15,8 @@ import com.cooksys.twitter_api.repositories.UserRepository;
 import com.cooksys.twitter_api.services.UserService;
 import com.cooksys.twitter_api.services.ValidateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final CredentialsMapper credentialsMapper;
     private final ProfileMapper profileMapper;
     private final TweetMapper tweetMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private final ValidateService validationService;
 
@@ -47,9 +50,9 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Credentials and Profile are required.");
         }
         String desiredUsername = credentials.getUsername();
-        String password = credentials.getPassword();
+        credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
         String email = profile.getEmail();
-        if (desiredUsername == null || password == null || email == null) {
+        if (credentials.getUsername() == null || credentials.getPassword() == null) {
             throw new BadRequestException("Username, password, and email are required.");
         }
         Optional<User> possibleUser = userRepository.findByCredentialsUsername(desiredUsername);
