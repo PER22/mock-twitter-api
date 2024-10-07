@@ -2,34 +2,21 @@ package com.cooksys.twitter_api.entities;
 
 import com.cooksys.twitter_api.embeddables.Credentials;
 import com.cooksys.twitter_api.embeddables.Profile;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.cooksys.twitter_api.entities.enums.AuthProvider;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "user_table")
 @Entity
-@NoArgsConstructor
+@Table(name = "user_table")
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(exclude = {"tweets", "likes", "mentions", "followers", "following"})
 public class User {
@@ -44,17 +31,21 @@ public class User {
 
   private boolean deleted = false;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AuthProvider authProvider;  // Tracks the authentication method used
+
   @Embedded
   @AttributeOverrides({
           @AttributeOverride(name = "username", column = @Column(nullable = false, unique = true)),
-          @AttributeOverride(name = "password", column = @Column(nullable = false))
+          @AttributeOverride(name = "password", column = @Column(nullable = true))  // nullable for OAuth users
   })
   private Credentials credentials;
 
   @Embedded
   @AttributeOverrides({
-          @AttributeOverride(name = "firstName", column = @Column(name="`firstName`")),
-          @AttributeOverride(name = "lastName", column = @Column(name="`lastName`")),
+          @AttributeOverride(name = "firstName", column = @Column(name = "`firstName`")),
+          @AttributeOverride(name = "lastName", column = @Column(name = "`lastName`")),
           @AttributeOverride(name = "email", column = @Column(nullable = false))
   })
   private Profile profile;
@@ -77,5 +68,4 @@ public class User {
 
   @ManyToMany(mappedBy = "followers")
   private Set<User> following = new HashSet<>();
-
 }

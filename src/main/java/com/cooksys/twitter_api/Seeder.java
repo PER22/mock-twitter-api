@@ -24,9 +24,7 @@ public class Seeder implements CommandLineRunner {
     private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
 
-    @Override
-    public void run(String... args) throws Exception {
-
+    private void seedDatabase() {
         // --- User 1 ---
         // Credentials
         Credentials user1Cred = new Credentials();
@@ -159,7 +157,7 @@ public class Seeder implements CommandLineRunner {
 
         hashtagRepository.saveAllAndFlush(Arrays.asList(hashtag1, hashtag2, hashtag3, hashtag4));
 
-  	    // ----- TWEETS -----
+        // ----- TWEETS -----
         // --- Start Tweet 1 ---
         Tweet tweet1 = new Tweet();
         tweet1.setAuthor(user1);
@@ -277,6 +275,12 @@ public class Seeder implements CommandLineRunner {
         Set<User> followers_1 = Set.of(user5, deletedUser);
         user1.setFollowers(followers_1);
         userRepository.saveAndFlush(user1);
+    }
+    @Override
+    public void run(String... args) throws Exception {
+
+//        seedDatabase();
+
     }
 
 }
